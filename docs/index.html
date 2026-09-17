@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker & Financial Analytics - Live Demo</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js 4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card-stat { transition: transform 0.2s ease, box-shadow 0.2s ease; border: none; border-radius: 12px; }
+        .card-stat:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .icon-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .chart-card { border-radius: 14px; border: none; }
+        .badge-food { background-color: #ff6384; color: white; }
+        .badge-transport { background-color: #36a2eb; color: white; }
+        .badge-housing { background-color: #cc65fe; color: white; }
+        .badge-utilities { background-color: #ffce56; color: #333; }
+        .badge-entertainment { background-color: #4bc0c0; color: white; }
+        .badge-shopping { background-color: #9966ff; color: white; }
+        .badge-healthcare { background-color: #ff9f40; color: white; }
+        .badge-education { background-color: #718093; color: white; }
+        .badge-savings { background-color: #2ecc71; color: white; }
+        .badge-other { background-color: #e74c3c; color: white; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="#">
+            <i class="fa-solid fa-wallet me-2 text-warning fs-3"></i>
+            Expense Tracker <span class="badge bg-warning text-dark ms-2 fs-6">Live Demo</span>
+        </a>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <button class="btn btn-warning fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                <i class="fa-solid fa-plus-circle me-1"></i> Add Expense
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 pb-5">
+
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-0">Financial Analytics Dashboard</h2>
+            <p class="text-muted mb-0">Interactive frontend demo preview for recruiters & hiring managers</p>
+        </div>
+        <div>
+            <button class="btn btn-outline-primary fw-semibold me-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#setBudgetModal">
+                <i class="fa-solid fa-gear me-1"></i> Set Monthly Budget
+            </button>
+            <button class="btn btn-warning fw-semibold shadow-sm" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                <i class="fa-solid fa-plus-circle me-1"></i> Add Expense
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI Metrics Cards Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-stat shadow-sm p-3 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small fw-semibold text-uppercase">Spent This Month</span>
+                        <h3 class="fw-bold text-danger mb-0 mt-1" id="kpiMonthSpent">₹34,850.00</h3>
+                    </div>
+                    <div class="icon-circle bg-danger-subtle text-danger">
+                        <i class="fa-solid fa-calendar-minus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-stat shadow-sm p-3 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small fw-semibold text-uppercase">Monthly Budget Limit</span>
+                        <h3 class="fw-bold text-primary mb-0 mt-1" id="kpiBudgetLimit">₹50,000.00</h3>
+                    </div>
+                    <div class="icon-circle bg-primary-subtle text-primary">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-stat shadow-sm p-3 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small fw-semibold text-uppercase">Remaining Budget</span>
+                        <h3 class="fw-bold text-success mb-0 mt-1" id="kpiRemainingBudget">₹15,150.00</h3>
+                    </div>
+                    <div class="icon-circle bg-success-subtle text-success">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-stat shadow-sm p-3 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small fw-semibold text-uppercase">Total Lifetime Spent</span>
+                        <h3 class="fw-bold text-dark mb-0 mt-1" id="kpiTotalSpent">₹71,350.00</h3>
+                    </div>
+                    <div class="icon-circle bg-info-subtle text-info">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Budget Progress Bar -->
+    <div class="card shadow-sm border-0 mb-4 rounded-3 p-3 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-dark"><i class="fa-solid fa-gauge-high text-primary me-2"></i> Monthly Budget Usage</span>
+            <span class="fw-semibold text-muted" id="kpiProgressText">69.7% used</span>
+        </div>
+        <div class="progress" style="height: 14px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" id="progressBar" role="progressbar" style="width: 69.7%;"></div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-lg-5">
+            <div class="card chart-card shadow-sm p-4 bg-white h-100">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-chart-pie text-warning me-2"></i> Spending by Category</h5>
+                <div class="d-flex align-items-center justify-content-center" style="position: relative; height: 300px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-7">
+            <div class="card chart-card shadow-sm p-4 bg-white h-100">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-chart-line text-primary me-2"></i> Monthly Spending Trend</h5>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Expenses Table -->
+    <div class="card shadow-sm border-0 rounded-3 bg-white">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-clock-rotate-left text-info me-2"></i> Recent Transactions</h5>
+            <span class="badge bg-primary fs-6" id="txCount">9 Transactions</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Date</th>
+                            <th>Expense Item</th>
+                            <th>Category</th>
+                            <th>Notes</th>
+                            <th class="text-end pe-4">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal: Add Expense -->
+<div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="addExpenseModalLabel"><i class="fa-solid fa-plus-circle me-2"></i> Add New Expense</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addExpenseForm">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Expense Title / Item</label>
+                        <input type="text" id="expTitle" class="form-control" placeholder="e.g. Grocery, Petrol, Netflix" required>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Amount (₹)</label>
+                            <input type="number" step="0.01" min="0.01" id="expAmount" class="form-control" placeholder="0.00" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Category</label>
+                            <select id="expCategory" class="form-select" required>
+                                <option value="Food & Dining">Food & Dining</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Housing & Rent">Housing & Rent</option>
+                                <option value="Bills & Utilities">Bills & Utilities</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Education">Education</option>
+                                <option value="Savings & Investments">Savings & Investments</option>
+                                <option value="Other Expenses">Other Expenses</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Date</label>
+                        <input type="date" id="expDate" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Notes / Description (Optional)</label>
+                        <textarea id="expNotes" class="form-control" rows="2" placeholder="Add details..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary fw-semibold px-4"><i class="fa-solid fa-check me-1"></i> Save Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Set Monthly Budget -->
+<div class="modal fade" id="setBudgetModal" tabindex="-1" aria-labelledby="setBudgetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title fw-bold" id="setBudgetModalLabel"><i class="fa-solid fa-piggy-bank me-2"></i> Set Monthly Budget</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="setBudgetForm">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Monthly Budget Limit (₹)</label>
+                        <input type="number" step="any" min="1" id="budgetLimitInput" value="50000" class="form-control form-control-lg fw-bold" required>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-dark fw-semibold px-4">Update Budget</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+
+<script>
+    let monthlyLimit = 50000;
+    let expenses = [
+        { date: '17 Sep 2026', title: 'Test Coffee & Snacks', category: 'Food & Dining', class: 'badge-food', notes: 'Added during verification test', amount: 450 },
+        { date: '16 Sep 2026', title: 'Grocery Shopping at Supermarket', category: 'Food & Dining', class: 'badge-food', notes: 'Weekly groceries', amount: 4250 },
+        { date: '12 Sep 2026', title: 'Monthly Apartment Rent', category: 'Housing & Rent', class: 'badge-housing', notes: 'House rent', amount: 14000 },
+        { date: '14 Sep 2026', title: 'Electricity & Broadband Bill', category: 'Bills & Utilities', class: 'badge-utilities', notes: 'WIFI + Electricity', amount: 2450 },
+        { date: '15 Sep 2026', title: 'Fuel / Metro Pass', category: 'Transportation', class: 'badge-transport', notes: 'Commute expenses', amount: 1800 },
+        { date: '11 Sep 2026', title: 'Weekend Dinner & Movies', category: 'Entertainment', class: 'badge-entertainment', notes: 'Outing with friends', amount: 1650 },
+        { date: '07 Sep 2026', title: 'Online Java Course', category: 'Education', class: 'badge-education', notes: 'Skill upgrade', amount: 1200 },
+        { date: '09 Sep 2026', title: 'Pharmacy Checkup', category: 'Healthcare', class: 'badge-healthcare', notes: 'Medicines', amount: 850 },
+        { date: '13 Sep 2026', title: 'SIP Investment Fund', category: 'Savings & Investments', class: 'badge-savings', notes: 'Mutual fund SIP', amount: 5000 }
+    ];
+
+    const catColors = {
+        'Food & Dining': '#ff6384',
+        'Transportation': '#36a2eb',
+        'Housing & Rent': '#cc65fe',
+        'Bills & Utilities': '#ffce56',
+        'Entertainment': '#4bc0c0',
+        'Shopping': '#9966ff',
+        'Healthcare': '#ff9f40',
+        'Education': '#c9cbcf',
+        'Savings & Investments': '#2ecc71',
+        'Other Expenses': '#e74c3c'
+    };
+
+    const catClasses = {
+        'Food & Dining': 'badge-food',
+        'Transportation': 'badge-transport',
+        'Housing & Rent': 'badge-housing',
+        'Bills & Utilities': 'badge-utilities',
+        'Entertainment': 'badge-entertainment',
+        'Shopping': 'badge-shopping',
+        'Healthcare': 'badge-healthcare',
+        'Education': 'badge-education',
+        'Savings & Investments': 'badge-savings',
+        'Other Expenses': 'badge-other'
+    };
+
+    let categoryChart, trendChart;
+
+    function renderApp() {
+        // Table
+        const tbody = document.getElementById('transactionTableBody');
+        tbody.innerHTML = '';
+        let monthSpent = 0;
+        let totalSpent = 36500; // includes past months
+
+        expenses.forEach(e => {
+            monthSpent += e.amount;
+            tbody.innerHTML += `
+                <tr>
+                    <td class="ps-4 text-muted small">${e.date}</td>
+                    <td class="fw-semibold text-dark">${e.title}</td>
+                    <td><span class="badge rounded-pill ${e.class}">${e.category}</span></td>
+                    <td class="text-muted small">${e.notes || '-'}</td>
+                    <td class="text-end pe-4 fw-bold text-dark">₹${e.amount.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                </tr>
+            `;
+        });
+
+        totalSpent += monthSpent;
+        const remaining = monthlyLimit - monthSpent;
+        const progress = Math.min((monthSpent / monthlyLimit) * 100, 100);
+
+        document.getElementById('kpiMonthSpent').innerText = '₹' + monthSpent.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        document.getElementById('kpiBudgetLimit').innerText = '₹' + monthlyLimit.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        
+        const remElem = document.getElementById('kpiRemainingBudget');
+        remElem.innerText = '₹' + remaining.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        remElem.className = remaining < 0 ? 'fw-bold text-danger mb-0 mt-1' : 'fw-bold text-success mb-0 mt-1';
+
+        document.getElementById('kpiTotalSpent').innerText = '₹' + totalSpent.toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+        document.getElementById('kpiProgressText').innerText = progress.toFixed(1) + '% used';
+        const pBar = document.getElementById('progressBar');
+        pBar.style.width = progress + '%';
+        pBar.className = progress > 90 ? 'progress-bar progress-bar-striped progress-bar-animated bg-danger' : (progress > 75 ? 'progress-bar progress-bar-striped progress-bar-animated bg-warning text-dark' : 'progress-bar progress-bar-striped progress-bar-animated bg-success');
+        document.getElementById('txCount').innerText = expenses.length + ' Transactions';
+
+        updateCharts();
+    }
+
+    function updateCharts() {
+        const catMap = {};
+        expenses.forEach(e => {
+            catMap[e.category] = (catMap[e.category] || 0) + e.amount;
+        });
+
+        const labels = Object.keys(catMap);
+        const data = Object.values(catMap);
+        const colors = labels.map(l => catColors[l] || '#333');
+
+        if (categoryChart) categoryChart.destroy();
+        categoryChart = new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderWidth: 2 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } } }
+        });
+
+        if (!trendChart) {
+            trendChart = new Chart(document.getElementById('trendChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Apr 2026', 'May 2026', 'Jun 2026', 'Jul 2026', 'Aug 2026', 'Sept 2026'],
+                    datasets: [{
+                        label: 'Spent (₹)',
+                        data: [12000, 15500, 18000, 16500, 20000, 34850],
+                        backgroundColor: 'rgba(54, 162, 235, 0.75)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            });
+        }
+    }
+
+    document.getElementById('addExpenseForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const title = document.getElementById('expTitle').value;
+        const amount = parseFloat(document.getElementById('expAmount').value);
+        const category = document.getElementById('expCategory').value;
+        const notes = document.getElementById('expNotes').value;
+
+        expenses.unshift({
+            date: '17 Sep 2026',
+            title: title,
+            category: category,
+            class: catClasses[category] || 'badge-other',
+            notes: notes,
+            amount: amount
+        });
+
+        renderApp();
+        bootstrap.Modal.getInstance(document.getElementById('addExpenseModal')).hide();
+        document.getElementById('addExpenseForm').reset();
+    });
+
+    document.getElementById('setBudgetForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        monthlyLimit = parseFloat(document.getElementById('budgetLimitInput').value);
+        renderApp();
+        bootstrap.Modal.getInstance(document.getElementById('setBudgetModal')).hide();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("expDate").value = new Date().toISOString().split('T')[0];
+        renderApp();
+    });
+</script>
+
+</body>
+</html>

@@ -1,5 +1,7 @@
 # 💰 Dynamic Expense Tracker & Financial Analytics Web Application
 
+> 🌐 **[Click Here for Live Interactive Demo](https://shivumalkapuri.github.io/expense-tracker)**
+
 A full-stack financial management web application built with **Java 21**, **Spring Boot 3**, **Spring Data JPA**, **H2 Embedded Database**, and **Thymeleaf + Chart.js**.
 
 ---
