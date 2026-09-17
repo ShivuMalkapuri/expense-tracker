@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="/">
+            <i class="fa-solid fa-wallet me-2 text-warning fs-3"></i>
+            Expense Tracker
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-5">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">
+                        <i class="fa-solid fa-chart-pie me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/expenses">
+                        <i class="fa-solid fa-list-check me-1"></i> All Expenses
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/budget">
+                        <i class="fa-solid fa-gear me-1"></i> Set Budget
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/h2-console" target="_blank">
+                        <i class="fa-solid fa-database me-1"></i> H2 DB
+                    </a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/expenses/new" class="btn btn-warning fw-bold shadow-sm">
+                    <i class="fa-solid fa-plus-circle me-1"></i> Add Expense
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

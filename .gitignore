@@ -1,0 +1,19 @@
+# Maven build target directory
+target/
+
+# Embedded H2 Database files
+data/
+*.mv.db
+*.trace.db
+
+# IDE configuration files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db

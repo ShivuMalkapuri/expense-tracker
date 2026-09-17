@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Add Expense</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container py-4" style="max-width: 650px;">
+
+    <div class="card shadow border-0 rounded-3 bg-white">
+        <div class="card-header bg-primary text-white p-3">
+            <h4 class="fw-bold mb-0"><i class="fa-solid fa-plus-circle me-2"></i> Add New Expense</h4>
+        </div>
+        <div class="card-body p-4">
+            <form th:action="@{/expenses/save}" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-dark">Expense Title / Item Name</label>
+                    <input type="text" name="title" class="form-control form-control-lg" placeholder="e.g. Grocery, Petrol, Netflix, Rent" required autofocus>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-sm-6">
+                        <label class="form-label fw-bold text-dark">Amount (₹)</label>
+                        <input type="number" step="any" min="0.01" name="amount" class="form-control form-control-lg" placeholder="0.00" required>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <label class="form-label fw-bold text-dark">Category</label>
+                        <select name="category" class="form-select form-select-lg" required>
+                            <option th:each="cat : ${categories}" 
+                                    th:value="${cat}" 
+                                    th:text="${cat.displayName}">Category</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-dark">Expense Date</label>
+                    <input type="date" name="expenseDate" id="pageExpenseDate" class="form-control form-control-lg" th:value="${todayDate}" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-dark">Notes / Description (Optional)</label>
+                    <textarea name="notes" class="form-control" rows="3" placeholder="Add additional details or remarks..."></textarea>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="/" class="btn btn-outline-secondary px-4"><i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard</a>
+                    <button type="submit" class="btn btn-primary fw-bold px-5 btn-lg"><i class="fa-solid fa-check me-2"></i> Save Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const d = document.getElementById("pageExpenseDate");
+        if (d && !d.value) {
+            d.value = new Date().toISOString().split('T')[0];
+        }
+    });
+</script>
+
+</body>
+</html>
